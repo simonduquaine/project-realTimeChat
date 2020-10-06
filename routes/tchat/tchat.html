@@ -21,18 +21,23 @@
     <form action="">
       <input id="m" autocomplete="off" /><button>Send</button>
     </form>
-    <script src="/socket.io/socket.io.js"></script>
+    <script src="/socket.io/socket.io.js"></script>l
     <!-- <script src='js/tchat.js'> </script> -->
     <script>
 let socket = io()
 let input = document.getElementById('m')
 let form = document.querySelector('form')
+let messages = document.getElementById('messages')
 
 form.addEventListener('submit', event => {
   event.preventDefault() // prevents page reloading
-  socket.emit('chat message', input.val())
-  input.val('')
+  socket.emit('chat message', input.value)
+  input.value = ''
   return false
+})
+
+socket.on('chat message', msg => {
+  
 })
 
     </script>

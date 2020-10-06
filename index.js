@@ -2,23 +2,24 @@ const APP = require('express')();
 const HTTP = require('http').createServer(APP);
 const IO = require('socket.io')(HTTP);
 
-app.get('/', (req, res) => {
+APP.get('/', (req, res) => {
   res.sendFile(__dirname + '/routes/tchat/tchat.html');
 });
 
-io.on('connection', (socket) => {
+IO.on('connection', (socket) => {
   console.log('a user connected');
   socket.on('disconnect', () => {
       console.log('a user disconnect')
   })
 });
 
-io.on('connection', (socket) => {
+IO.on('connection', (socket) => {
     socket.on('chat message', (msg) => {
-      io.emit('chat message', msg);
+        console.log('Message ' + msg)
+        IO.emit('chat message', msg);
     });
   });
 
-http.listen((000, () => {
+HTTP.listen(5000, () => {
   console.log('listening on *:3000');
-});
+})
