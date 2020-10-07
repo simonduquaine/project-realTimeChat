@@ -4,30 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tchat Me !</title>
-    <link rel="stylesheet" href="./assets/style.css">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font: 13px Helvetica, Arial; }
-      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-      form input { border: 0; padding: 10px; width: 90%; margin-right: 0.5%; }
-      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-      #messages { list-style-type: none; margin: 0; padding: 0; }
-      #messages li { padding: 5px 10px; }
-      #messages li:nth-child(odd) { background: #eee; }
-    </style>
-</head>
+    <link rel="stylesheet" href="style/style.css">
+  </head>
 <body>
-    <ul id="messages"></ul>
+<header>
+  <h1>Tchat du coeur !</h1>
+</header>
+<div class="tchat">
+  <div class="tchat__messages">
+    <ul id="messages">
+      <!-- affichage des messages-->
+    </ul>
+  </div>
+  <div class="tchat__input">
+    <!-- Input pour entrer le message -->
     <form action="">
       <input id="m" autocomplete="off" /><button>Send</button>
     </form>
-    <script src="/socket.io/socket.io.js"></script>l
+  </div>
+</div>
+    <script src="/socket.io/socket.io.js"></script>
     <!-- <script src='js/tchat.js'> </script> -->
+  </div>
     <script>
 let socket = io()
 let input = document.getElementById('m')
 let form = document.querySelector('form')
-let messages = document.getElementById('messages')
 
 form.addEventListener('submit', event => {
   event.preventDefault() // prevents page reloading
@@ -36,8 +38,15 @@ form.addEventListener('submit', event => {
   return false
 })
 
+const renderMsg = msg => {
+  let msgs = document.getElementById('messages')
+  let li = document.createElement('li')
+  li.innerText = msg
+  msgs.appendChild(li)
+}
+
 socket.on('chat message', msg => {
-  
+  renderMsg(msg)
 })
 
     </script>

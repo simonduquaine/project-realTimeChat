@@ -1,10 +1,14 @@
-const APP = require('express')();
+const EXPRESS = require('express');
+const APP = EXPRESS()
 const HTTP = require('http').createServer(APP);
 const IO = require('socket.io')(HTTP);
+
 
 APP.get('/', (req, res) => {
   res.sendFile(__dirname + '/routes/tchat/tchat.html');
 });
+
+APP.use(EXPRESS.static(__dirname + '/routes/tchat'));
 
 IO.on('connection', (socket) => {
   console.log('a user connected');
