@@ -1,25 +1,22 @@
 {
   "name": "project-realtimechat",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.2",
+  "description": "Little chat using fckn js technologies",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "test-mark"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/simonduquaine/project-realTimeChat.git"
   },
-  "author": "",
+  "author": "Simon Duquaine / Robin Jacquemart / Jurgen Cruz",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/simonduquaine/project-realTimeChat/issues"
   },
   "homepage": "https://github.com/simonduquaine/project-realTimeChat#readme",
   "dependencies": {
-    "ejs": "^3.1.5",
-    "express": "^4.17.1",
     "socket.io": "^2.3.0"
-  },
-  "devDependencies": {}
+  }
 }
