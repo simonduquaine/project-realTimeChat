@@ -12,6 +12,9 @@ body {
 /* Ensemble du chat */
 .tchat{
     position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     background: white;
     height: 80vh;
     border: 1px solid rgb(180, 180, 180);
@@ -20,12 +23,19 @@ body {
     padding: 2vh;
 }
 
+.tchat__messages{
+    display: block;
+    width: auto;
+    height: 90%;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
 /*Zone d'écriture / Button */
 .tchat__input{
-    position: absolute;
     width: 100%;
     bottom: 2vh;
-}
+} 
 
 /* Zone ecrite et button */
 form {
@@ -47,12 +57,22 @@ form button {
     border-radius: 4px;
 }
 
+ul{
+    width: inherit;
+    max-height: 100%;
+    overflow: scroll;
+
+}
+
 li {
     color: white;
+    word-wrap: break-word;
     font-weight: bold;
+    text-align: left;
+    width: max-content;
+    max-width: 97%;
     padding: 1vh;
     margin: 1vh 0;
-    width: max-content;
     list-style: none;
     background: rgba(161, 41, 41, 0.452);
     border-radius: 10px;
