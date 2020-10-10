@@ -30,6 +30,9 @@
 let socket = io()
 let input = document.getElementById('m')
 let form = document.querySelector('form')
+let user ='a user connected !! '
+
+
 
 form.addEventListener('submit', event => {
   event.preventDefault() // prevents page reloading
@@ -38,7 +41,7 @@ form.addEventListener('submit', event => {
   return false
 })
 
-const renderMsg = msg => {
+let renderMsg = msg => {
   let msgs = document.getElementById('messages')
   let li = document.createElement('li')
   li.innerText = msg
@@ -47,6 +50,11 @@ const renderMsg = msg => {
 
 socket.on('chat message', msg => {
   renderMsg(msg)
+})
+
+socket.on('connect', () => {
+renderMsg(user)
+socket.emit('new-user', user)
 })
 
     </script>

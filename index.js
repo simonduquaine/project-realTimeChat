@@ -9,19 +9,20 @@ APP.get('/', (req, res) => {
 
 APP.use(EXPRESS.static(__dirname + '/routes/tchat'))
 
-IO.on('connection', (socket) => {
+IO.on('connect', (socket) => {
   console.log('a user connected')
-  socket.on('disconnect', () => {
+  socket.on('new-user', data => {
+    IO.emit('new-user', data)
+  })
+  socket.on('chat message', (msg) => {
+    console.log('Message ' + msg)
+    IO.emit('chat message', msg)
+});
+
+  socket.on('disconnect', (msg) => {
       console.log('a user disconnect')
   })
 });
-
-IO.on('connection', (socket) => {
-    socket.on('chat message', (msg) => {
-        console.log('Message ' + msg)
-        IO.emit('chat message', msg)
-    });
-  });
 
 HTTP.listen(3000, () => {
   console.log('listening on *:3000')
