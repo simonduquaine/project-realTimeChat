@@ -4,7 +4,7 @@
   "description": "Little chat using fckn js technologies",
   "main": "index.js",
   "scripts": {
-    "test": "test-mark"
+    "start": "node server/index.js"
   },
   "repository": {
     "type": "git",
@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/simonduquaine/project-realTimeChat#readme",
   "dependencies": {
+    "express": "^4.17.1",
+    "jquery": "^3.5.1",
     "socket.io": "^2.3.0"
   }
 }
