@@ -13,15 +13,15 @@ const USER = require('./models/user')
 const EJS = require('ejs')
 // Bodyparser pour convertir les données en json
 const BODYPARSER = require('body-parser');
-const user = require('./models/user');
 
 //DATABASE
 APP.use(BODYPARSER.json())
+APP.use(EXPRESS.json())
 APP.set("view engine", "ejs")
 
 MONGOOSE.set('useNewUrlParser', true)
 MONGOOSE.set('useUnifiedTopology', true)
-MONGOOSE.connect('mongodb+srv://superuser:motdepasse@cluster0.bihgx.mongodb.net/Cluster0?retryWrites=true&w=majority')
+MONGOOSE.connect('mongodb+srv://superuser:motdepasse@cluster0.bihgx.mongodb.net/users?retryWrites=true&w=majority')
   .then(() => {
     console.log('Successfully connected to MongoDB Atlas!');
   })
@@ -40,9 +40,9 @@ APP.use(require('express-session')({
 APP.use(PASSPORT.initialize())
 APP.use(PASSPORT.session())
 
-// PASSPORT.use(new LOCAL_STRATEGY(User.authenticate()))
-// PASSPORT.serializeUser(User.serializeUser())
-// PASSPORT.deserializeUser(User.deserializeUser())
+PASSPORT.use(new LOCAL_STRATEGY(USER.authenticate()))
+PASSPORT.serializeUser(USER.serializeUser())
+PASSPORT.deserializeUser(USER.deserializeUser())
 
 
 
@@ -51,36 +51,43 @@ let isLogged = (req, res, next) => {
   res.redirect('/login')
 }
 
-
+APP.set('views', __dirname + '/views/login/');
 //ROUTES
 APP.get('/', isLogged, (req, res) => {
-  res.sendFile(__dirname + '/routes/tchat/tchat.html')
+  res.sendFile(__dirname + '/views/tchat/tchat.html')
 });
 
 APP.get('/login', (req, res) => {
-  res.sendFile(__dirname + '/routes/login/login.html')
+  res.sendFile(__dirname + '/views/login/login.html')
 })
 
 APP.get('/register', (req, res) => {
-  res.sendFile(__dirname + '/routes/login/register.html')
+  res.sendFile(__dirname + '/views/login/register.html')
 })
 
-APP.post('/register', (req, res)=> {
-  let username = req.body.username
-  let password = req.body.password
-  USER.register(new USER({username: username}),
-    password, (err, USER) => {
-      if(err){
-        console.log(err)
-        return res.render('register')
-      }
+APP.post('/register', async (req, res)=> {
+  const user = new USER(req.body)
 
-      PASSPORT.authenticate('local')(
-        req, res, () => {
-          res.render('secret')
-        }
-      )
-    })
+  try{
+    await user.save()
+    res.send(user)
+  } catch(err){
+    res.status(500).send(err)
+  }
+  // USER.register(new USER({username: username}),
+  //   password, (err, USER) => {
+  //     if(err){
+  //       console.log(err)
+  //       return res.sendFile(__dirname + '/views/login/register.html')
+
+  //     }
+
+  //     PASSPORT.authenticate('local')(
+  //       req, res, () => {
+  //         return res.sendFile(__dirname + '/views/login/login.html')
+  //       }
+  //     )
+  //   })
 })
 
 APP.post('/login', PASSPORT.authenticate('local', {
@@ -90,7 +97,7 @@ APP.post('/login', PASSPORT.authenticate('local', {
 
 })
 
-APP.use(EXPRESS.static(__dirname + '/routes/tchat'))
+APP.use(EXPRESS.static(__dirname + '/views/tchat'))
 
 //Socket io connection et interaction
 IO.on('connect', (socket) => {
