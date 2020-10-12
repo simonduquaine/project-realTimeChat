@@ -10,12 +10,14 @@ const PASSPORT_LOCAL_MONGOOSE = require('passport-local-mongoose')
 const MONGOOSE = require('mongoose')
 //DB model
 const USER = require('./models/user')
+const EJS = require('ejs')
 // Bodyparser pour convertir les données en json
 const BODYPARSER = require('body-parser');
-const passport = require('passport');
+const user = require('./models/user');
 
 //DATABASE
 APP.use(BODYPARSER.json())
+APP.set("view engine", "ejs")
 
 MONGOOSE.set('useNewUrlParser', true)
 MONGOOSE.set('useUnifiedTopology', true)
@@ -34,21 +36,58 @@ APP.use(require('express-session')({
   saveUninitialized: false
 }))
 
-APP.use(passport.initialize())
-APP.use(passport.session())
 
-passport.use(new LOCAL_STRATEGY(USER.authenticate()))
-passport.serializeUser(USER.serializeUser())
-passport.deserializeUser(USER.deserializeUser())
+APP.use(PASSPORT.initialize())
+APP.use(PASSPORT.session())
 
-//Routes
-APP.get('/', (req, res) => {
+// PASSPORT.use(new LOCAL_STRATEGY(User.authenticate()))
+// PASSPORT.serializeUser(User.serializeUser())
+// PASSPORT.deserializeUser(User.deserializeUser())
+
+
+
+let isLogged = (req, res, next) => {
+  if (req.isAuthenticated()) return next()
+  res.redirect('/login')
+}
+
+
+//ROUTES
+APP.get('/', isLogged, (req, res) => {
   res.sendFile(__dirname + '/routes/tchat/tchat.html')
 });
 
-// condition si connecté ou pas pour redirigé ici
 APP.get('/login', (req, res) => {
   res.sendFile(__dirname + '/routes/login/login.html')
+})
+
+APP.get('/register', (req, res) => {
+  res.sendFile(__dirname + '/routes/login/register.html')
+})
+
+APP.post('/register', (req, res)=> {
+  let username = req.body.username
+  let password = req.body.password
+  USER.register(new USER({username: username}),
+    password, (err, USER) => {
+      if(err){
+        console.log(err)
+        return res.render('register')
+      }
+
+      PASSPORT.authenticate('local')(
+        req, res, () => {
+          res.render('secret')
+        }
+      )
+    })
+})
+
+APP.post('/login', PASSPORT.authenticate('local', {
+  successRedirect: '/tchat',
+  failureRedirect: '/login'
+}), (req, res) => {
+
 })
 
 APP.use(EXPRESS.static(__dirname + '/routes/tchat'))
