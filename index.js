@@ -2,16 +2,44 @@ const EXPRESS = require('express')
 const APP = EXPRESS()
 const HTTP = require('http').createServer(APP);
 const IO = require('socket.io')(HTTP);
+//Login/register package
+const PASSPORT = require('passport')
+const LOCAL_STRATEGY = require('passport-local')
+const PASSPORT_LOCAL_MONGOOSE = require('passport-local-mongoose')
+//For the DB
+const MONGOOSE = require('mongoose')
+//DB model
+const USER = require('./models/user')
+// Bodyparser pour convertir les données en json
+const BODYPARSER = require('body-parser');
+const passport = require('passport');
 
-// const MONGOOSE = require('mongoose')
+//DATABASE
+APP.use(BODYPARSER.json())
 
-// // Bodyparser pour convertir les données en json
-// const BODYPARSER = require('body-parser')
+MONGOOSE.set('useNewUrlParser', true)
+MONGOOSE.set('useUnifiedTopology', true)
+MONGOOSE.connect('mongodb+srv://superuser:motdepasse@cluster0.bihgx.mongodb.net/Cluster0?retryWrites=true&w=majority')
+  .then(() => {
+    console.log('Successfully connected to MongoDB Atlas!');
+  })
+  .catch((error) => {
+    console.log('Unable to connect to MongoDB Atlas!');
+    console.error(error);
+  });
 
-// APP.use(BODYPARSER.json())
+APP.use(require('express-session')({
+  secret:"PHP is bad",
+  resave: false,
+  saveUninitialized: false
+}))
 
-// //require les données json
-// require('./models/user')(APP)
+APP.use(passport.initialize())
+APP.use(passport.session())
+
+passport.use(new LOCAL_STRATEGY(USER.authenticate()))
+passport.serializeUser(USER.serializeUser())
+passport.deserializeUser(USER.deserializeUser())
 
 //Routes
 APP.get('/', (req, res) => {
