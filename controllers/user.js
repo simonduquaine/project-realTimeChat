@@ -18,7 +18,7 @@ exports.signup = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
-        User.findOne({ username: req.body.email })
+        userModel.findOne({ username: req.body.username })
                 .then(user => {
                         if (!user) {
                                 return res.status(401).json({ error: 'Utilisateur non trouvé !' });
@@ -28,16 +28,19 @@ exports.login = (req, res, next) => {
                                         if (!valid) {
                                                 return res.status(401).json({ error: 'Mot de passe incorrect !' });
                                         }
+                                        const token = jwt.sign(
+                                                { userId: user._id, userName: user.username },
+                                                'RANDOM_TOKEN_SECRET',
+                                                { expiresIn: '24h' }
+                                        )
                                         res.status(200).json({
+                                                userName: user.username,
                                                 userId: user._id,
-                                                token: jwt.sign(
-                                                        { userId: user._id },
-                                                        'RANDOM_TOKEN_SECRET',
-                                                        { expiresIn: '24h' }
-                                                )
+                                                token: token
+                                                
                                         });
                                 })
-                                .catch(error => res.status(500).json({ error }));
+                                .catch(error => res.status(500).json({ error: 'Erreur 1' }));
                 })
-                .catch(error => res.status(500).json({ error }));
+                .catch(error => res.status(500).json({ error2: 'Erreur 2' }));
 };
