@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tchat Me !</title>
+    <link rel="stylesheet" href="style/style.css">
+  </head>
+<body>
+<header>
+  <h1>Tchat du coeur !</h1>
+</header>
+<section class="tchat">
+  <div class="tchat__messages">
+    <ul id="messages">
+      <!-- affichage des messages-->
+    </ul>
+  </div>
+  <div class="tchat__input">
+    <!-- Input pour entrer le message -->
+    <form action="">
+      <input id="m" autocomplete="off" /><button>Send</button>
+    </form>
+  </div>
+</section>
+    <script src="/socket.io/socket.io.js"></script>
+    <!-- <script src='js/tchat.js'> </script> -->
+  </div>
+    <script>
+let socket = io()
+let input = document.getElementById('m')
+let form = document.querySelector('form')
+let user ='a user connected !! '
+
+
+
+form.addEventListener('submit', event => {
+  event.preventDefault() // prevents page reloading
+  socket.emit('chat message', input.value)
+  input.value = ''
+  return false
+})
+
+let renderMsg = msg => {
+  let msgs = document.getElementById('messages')
+  let li = document.createElement('li')
+  li.innerText = msg
+  msgs.appendChild(li)
+}
+
+socket.on('chat message', msg => {
+  renderMsg(msg)
+})
+
+socket.on('connect', () => {
+renderMsg(user)
+socket.emit('new-user', user)
+})
+
+    </script>
+</body>
+</html>
