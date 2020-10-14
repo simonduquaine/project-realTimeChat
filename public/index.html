@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Real-Time Chat App using Socket.io and Express.js</title>
+        <meta charset="UTF-8" />
+        <link rel="stylesheet" href="style.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h1>Welcome to the chat :)</h1>
+        <ul class="feed"></ul>
+        
+        <form class="messaging-form" action="#">
+            <span class="feedback"></span>
+            <div class="message-input">
+                <span class="avatar">?</span>
+                <input type="text" class="message-input-field name-input" placeholder="Please write your name here" />
+            </div>
+            
+            <button class="join">Join the chat</button>
+        </form>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+        <script src="app.js"></script>
+    </body>
+</html>
+
