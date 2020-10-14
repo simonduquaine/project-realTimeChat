@@ -19,7 +19,8 @@ mongoose.connect("mongodb+srv://sim:a1z2e3r4@mydb.lvrqq.mongodb.net/myapp?retryW
 app.use('/register', userRoutes);
 app.use('/login', userRoutes);
 
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/public/'));
+
 
 
 app.listen(3000, function () {
